@@ -1,1 +1,124 @@
-<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>BioAcus-Ñuble AI — Monitoreo Bioacústico</title><link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="assets/img/logo.svg" type="image/svg+xml"><meta name="theme-color" content="#0c0f10"><link rel="preload" href="assets/css/style.css" as="style"><link rel="stylesheet" href="assets/css/style.css"></head><body><header><div class="container flex"><a class="logo" href="./" aria-label="Inicio"><img src="assets/img/logo.svg" alt="BioAcus-Ñuble AI logo"><div><strong>BioAcus-Ñuble AI</strong><br><span class="small">Huella acústica · TinyML/Browser</span></div></a><span class="badge">PWA</span><div class="toolbar"><a class="btn" href="viewer3d/">👁️ 3D</a><a class="btn" href="viewerAR/">📱 AR</a><a class="btn" href="viewerVR/">🥽 VR</a><button id="btn-export" class="btn">💾 Exportar dataset</button><div class="theme-switcher"><button id="themeBtn" class="btn">🎨 <span id="themeLabel">🌙 Oscuro</span></button><div id="themeMenu" class="theme-menu"><button class="btn" onclick="setTheme('dark')">🌙 Oscuro</button><button class="btn" onclick="setTheme('light')">☀️ Claro</button><button class="btn" onclick="setTheme('contrast')">⚡ Alto contraste</button><button class="btn" onclick="setTheme('sepia')">📜 Sepia</button></div></div></div></div></header><main class="container"><section class="grid"><div class="card col-8"><h2>🎙️ Grabador + Espectrograma (en vivo)</h2><div class="flex gap"><button id="btn-start" class="btn solid">▶️ Iniciar</button><button id="btn-stop" class="btn">⏹️ Detener</button><span id="rec-state" class="small" style="opacity:.8">—</span></div><canvas id="spect" class="spect" aria-label="Espectrograma en vivo"></canvas><p class="small">Privacidad: la app procesa audio en tu navegador; por defecto no guarda audio crudo. Solo puedes exportar “huellas” (vectores de 16 bandas).</p></div><div class="card col-4"><h2>🧪 Dataset de huellas</h2><label>Etiqueta: <input id="label" type="text" value="Chucao"></label><div class="flex gap" style="margin-top:8px"><button id="btn-capture" class="btn">➕ Capturar huella</button><button id="btn-train" class="btn solid">🧠 Calcular centroides</button></div><p id="status" class="small">—</p><hr class="sep"><h3 class="small">📥 Importar / 📤 Exportar</h3><input id="file-import" type="file" accept=".json"><p class="small">Audio de prueba: <input id="file-audio" type="file" accept="audio/*"></p></div><div class="card col-6"><h2>🔎 Clasificación (tiempo real)</h2><div class="kpi"><div><div class="label">Ahora:</div><div id="now-predict" class="value">—</div></div><span class="tag">Predicción</span></div><canvas id="bars" class="bars" aria-label="Probabilidades por clase"></canvas><p class="small">El clasificador usa similitud coseno con centroides por etiqueta (entrenados con tus huellas).</p></div><div class="card col-6"><h2>🗂️ Conceptos clave</h2><ul class="small"><li><strong>Huellas (fingerprints):</strong> 16 bandas log-frecuencia normalizadas ⇒ sin audio crudo.</li><li><strong>Dataset local:</strong> quedan en memoria del navegador; exporta/guarda manualmente.</li><li><strong>TinyML/Edge:</strong> en <code>firmware/</code> hay un stub para ESP32-S3 con mic I2S.</li><li><strong>Privacidad:</strong> pensado para ciencia escolar ética. Puedes desactivar micrófono cuando no se use.</li></ul></div><div class="card col-12"><h2>📘 Guía rápida</h2><ol class="small"><li>Inicia la grabación y observa el espectrograma.</li><li>Cuando suene la especie/ruido de interés, pulsa <strong>Capturar huella</strong> y pon etiqueta.</li><li>Repite y luego <strong>Calcular centroides</strong>.</li><li>La predicción en vivo mostrará la etiqueta más probable y barras de probabilidad.</li></ol></div></section></main><div class="floatbar"><a class="btn" href="viewer3d/">👁️ 3D</a><a class="btn" href="viewerAR/">📱 AR</a><a class="btn" href="viewerVR/">🥽 VR</a></div><footer class="container">belen.acpe@gmail.com · 📞 +56 9 6266 4960<br>👨‍💻 Francisco Pinto — 📧 franciscoandresp@gmail.com · 📞 +56 9 2002 7992<br>Hecho con ❤️ para el Liceo Bicentenario de Excelencia Polivalente San Nicolás — Proyecto Educativo · 👁️ 3D 📱 AR 🥽 VR</footer><script type="module" src="assets/js/app.js"></script></body></html>
+
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>BioAcus-Ñuble AI — v1.1</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="assets/img/logo.svg" type="image/svg+xml">
+<meta name="theme-color" content="#0c0f10">
+<link rel="preload" href="assets/css/style.css" as="style"><link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+<header>
+  <div class="container flex">
+    <a class="logo" href="./" aria-label="Inicio">
+      <img src="assets/img/logo.svg" alt="BioAcus-Ñuble AI logo">
+      <div>
+        <strong>BioAcus-Ñuble AI</strong><br><span class="small">Huella acústica · TinyML/Browser</span>
+      </div>
+    </a>
+    <span class="badge">PWA</span>
+    <div class="toolbar">
+      <a class="btn" href="viewer3d/">👁️ 3D</a>
+      <a class="btn" href="viewerAR/">📱 AR</a>
+      <a class="btn" href="viewerVR/">🥽 VR</a>
+      <button id="btn-export" class="btn">💾 Exportar dataset</button>
+      <div class="theme-switcher">
+        <button id="themeBtn" class="btn">🎨 <span id="themeLabel">🌙 Oscuro</span></button>
+        <div id="themeMenu" class="theme-menu">
+          <button class="btn" onclick="setTheme('dark')">🌙 Oscuro</button>
+          <button class="btn" onclick="setTheme('light')">☀️ Claro</button>
+          <button class="btn" onclick="setTheme('contrast')">⚡ Alto contraste</button>
+          <button class="btn" onclick="setTheme('sepia')">📜 Sepia</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main class="container">
+  <section class="grid">
+    <div class="card col-8">
+      <h2>🎙️ Grabador + Espectrograma (en vivo)</h2>
+      <div class="flex gap">
+        <button id="btn-start" class="btn solid">▶️ Iniciar</button>
+        <button id="btn-stop" class="btn">⏹️ Detener</button>
+        <span id="rec-state" class="small" style="opacity:.8">—</span>
+      </div>
+      <canvas id="spect" class="spect" aria-label="Espectrograma en vivo"></canvas>
+      <p class="small">Privacidad: la app procesa audio en tu navegador; por defecto no guarda audio crudo. Solo exporta “huellas” (vectores de 16 bandas).</p>
+    </div>
+
+    <div class="card col-4">
+      <h2>🧪 Dataset de huellas</h2>
+      <label>Etiqueta: <input id="label" type="text" value="Chucao"></label>
+      <div class="flex gap" style="margin-top:8px">
+        <button id="btn-capture" class="btn">➕ Capturar huella</button>
+        <button id="btn-train" class="btn solid">🧠 Calcular centroides</button>
+      </div>
+      <hr class="sep">
+      <h3 class="small">🎯 Captura por ventana</h3>
+      <div class="flex gap">
+        <label>Segundos: <input id="window-sec" type="number" min="1" max="10" value="2"></label>
+        <label>Tomas: <input id="window-shots" type="number" min="1" max="10" value="3"></label>
+        <button id="btn-window-capture" class="btn">🎙️ Tomar ventanas</button>
+      </div>
+      <p id="status" class="small">—</p>
+      <hr class="sep">
+      <h3 class="small">📥 Importar / 📤 Exportar</h3>
+      <input id="file-import" type="file" accept=".json">
+    </div>
+
+    <div class="card col-6">
+      <h2>🔎 Clasificación (tiempo real)</h2>
+      <div class="kpi"><div><div class="label">Ahora:</div><div id="now-predict" class="value">—</div></div><span class="tag">Predicción</span></div>
+      <canvas id="bars" class="bars" aria-label="Probabilidades por clase"></canvas>
+      <p class="small">Clasificador por centroides (coseno + softmax).</p>
+    </div>
+
+    <div class="card col-6">
+      <h2>🌐 MQTT (opcional)</h2>
+      <div class="small">Conéctate a un broker <code>wss://</code> y suscríbete a <code>bioacus/fp</code> (o el que definas).</div>
+      <div class="flex gap" style="margin:8px 0">
+        <label>URL wss: <input id="mqtt-url" type="url" placeholder="wss://broker:port/mqtt"></label>
+        <label>Usuario: <input id="mqtt-user" type="text" placeholder=""></label>
+        <label>Clave: <input id="mqtt-pass" type="text" placeholder=""></label>
+        <label>Tema: <input id="mqtt-topic" type="text" value="bioacus/fp"></label>
+      </div>
+      <div class="flex gap">
+        <button id="btn-mqtt-connect" class="btn">🔌 Conectar</button>
+        <button id="btn-mqtt-disconnect" class="btn">❌ Desconectar</button>
+        <span id="mqtt-state" class="small">Desconectado</span>
+      </div>
+      <p class="small">Payload esperado: {"ts": 1730000000000, "bands":[16 valores], "label":"opcional"}</p>
+    </div>
+
+    <div class="card col-12">
+      <h2>🗺️ Mapa calor horario</h2>
+      <div class="flex gap">
+        <label>Últimos días: <input id="heat-days" type="number" min="1" max="30" value="7"></label>
+      </div>
+      <canvas id="heatmap" class="canvas-heat" aria-label="Mapa de calor por hora y día"></canvas>
+      <p class="small">Cuenta de capturas/ingestas por hora (filtrado a los últimos N días). Útil para ver patrones de actividad.</p>
+    </div>
+  </section>
+</main>
+
+<div class="floatbar">
+  <a class="btn" href="viewer3d/">👁️ 3D</a>
+  <a class="btn" href="viewerAR/">📱 AR</a>
+  <a class="btn" href="viewerVR/">🥽 VR</a>
+</div>
+
+<footer class="container">
+  belen.acpe@gmail.com · 📞 +56 9 6266 4960<br>
+  👨‍💻 Francisco Pinto — 📧 franciscoandresp@gmail.com · 📞 +56 9 2002 7992<br>
+  Hecho con ❤️ para el Liceo Bicentenario de Excelencia Polivalente San Nicolás — Proyecto Educativo · 👁️ 3D 📱 AR 🥽 VR
+</footer>
+
+<script src="https://unpkg.com/mqtt/dist/mqtt.min.js"></script>
+<script type="module" src="assets/js/app.js"></script>
+</body>
+</html>

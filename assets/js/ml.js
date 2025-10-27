@@ -1,9 +1,6 @@
 
 export const ML = (()=>{
-  const state = {
-    labels: ['Chucao','Rana chilena','Tricahue','Silencio'],
-    dataset: {}, centroids: {}, hist: []
-  };
+  const state = { labels: ['Chucao','Rana chilena','Tricahue','Silencio'], dataset: {}, centroids: {}, hist: [] };
   state.labels.forEach(l=> state.dataset[l]=[]);
 
   function setLabels(arr){ state.labels = arr; state.dataset={}; arr.forEach(l=> state.dataset[l]=[]); state.centroids={}; }
@@ -35,6 +32,5 @@ export const ML = (()=>{
   }
   function exportJSON(){ return JSON.stringify({labels:state.labels, dataset:state.dataset}, null, 2); }
   function importJSON(text){ const obj=JSON.parse(text); setLabels(obj.labels||[]); state.dataset=obj.dataset||{}; computeCentroids(); }
-  function hourlyCounts(){ const c={}; for(const h of state.hist){ const d=new Date(h.ts); const k=d.getHours(); c[k]=(c[k]||0)+1; } return c; }
-  return {state,setLabels,addSample,computeCentroids,predict,exportJSON,importJSON,hourlyCounts};
+  return {state,setLabels,addSample,computeCentroids,predict,exportJSON,importJSON};
 })();

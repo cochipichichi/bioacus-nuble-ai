@@ -1,18 +1,22 @@
-# BioAcus-Ñuble AI
 
-Monitoreo bioacústico escolar con **huellas de 16 bandas** (sin audio crudo), espectrograma en vivo y clasificador ligero en el navegador (centroides + coseno). PWA offline-first, export/import JSON y visores 👁️ 3D / 📱 AR / 🥽 VR.
+# BioAcus-Ñuble AI — v1.1
 
-## Flujo rápido
-1. **Iniciar** grabación ▶️ y observar espectrograma.
-2. **Capturar huella** ➕ con etiqueta (p. ej., *Chucao*).
-3. **Calcular centroides** 🧠 para entrenar.
-4. Ver **predicción** en tiempo real.
+Añadidos:
+- 🗺️ **Mapa calor horario** (24 x últimos N días).
+- 🎯 **Captura por ventana** (N segundos, múltiples tomas).
+- 🌐 **MQTT básico** para ingesta de huellas remotas.
 
-## Dataset y privacidad
-- Vectores de 16 bandas (100–8000 Hz). No guarda audio crudo por defecto.
-- Exporta/Importa JSON para colaborar.
+## Uso rápido
+1. Inicia ▶️ y observa el espectrograma.
+2. Captura huellas (instantánea o por ventana) y entrena centroides.
+3. Conéctate opcionalmente a un broker MQTT (`wss://`) y suscríbete a `bioacus/fp`.
 
-## Edge / TinyML (ESP32-S3)
-`firmware/esp32_s3_i2s_stub.ino` contiene un stub para features de 16 bandas vía I2S.
+### MQTT payload
+```json
+{"ts": 1730000000000, "bands": [0.1, -0.2, ... 16 vals ...], "label":"opcional"}
+```
+
+## Calor horario
+- Ajusta "Últimos días" (7 por defecto). Mide actividad por hora (capturas locales + remotas).
 
 MIT — educativo.

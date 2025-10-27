@@ -1,0 +1,8 @@
+{
+  "mqtt": {
+    "url": "",
+    "username": "",
+    "password": "",
+    "topic": "bioacus/fp"
+  }
+}
