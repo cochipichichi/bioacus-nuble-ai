@@ -1,0 +1,15 @@
+{
+  "name": "BioAcus-\u00d1uble AI",
+  "short_name": "BioAcus",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#0c0f10",
+  "theme_color": "#0c0f10",
+  "icons": [
+    {
+      "src": "assets/img/logo.svg",
+      "sizes": "128x128",
+      "type": "image/svg+xml"
+    }
+  ]
+}

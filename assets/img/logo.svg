@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="BioAcus-Ñuble AI">
+  <defs><radialGradient id="g" cx="50%" cy="40%" r="60%"><stop offset="0" stop-color="#00ffa3"/><stop offset="1" stop-color="#00c2ff"/></radialGradient></defs>
+  <rect x="0" y="0" width="128" height="128" rx="24" fill="#0b1013"/>
+  <g transform="translate(64,64)">
+    <path d="M-40,10 Q-20,-30,0,-10 T40,10" stroke="url(#g)" stroke-width="6" fill="none" stroke-linecap="round"/>
+    <circle cx="-15" cy="0" r="6" fill="#00ffa3"/><circle cx="15" cy="0" r="6" fill="#00c2ff"/>
+  </g>
+  <text x="64" y="120" text-anchor="middle" font-family="ui-sans-serif,system-ui" font-size="12" fill="#9cc">BioAcus-Ñuble AI</text>
+</svg>
